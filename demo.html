@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMask Clone</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        async function getAvailableCurrencies() {
+            try {
+                let response = await fetch("https://api.coingecko.com/api/v3/simple/supported_vs_currencies");
+                return await response.json();
+            } catch {
+                return ["usd", "eur", "gbp", "jpy"]; // Fallback options
+            }
+        }
+        
+        async function getEthPrice(currency) {
+            try {
+                let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=${currency}`);
+                let data = await response.json();
+                return data.ethereum[currency] ? data.ethereum[currency].toFixed(2) : "N/A";
+            } catch {
+                return "N/A";
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", async function () {
+            let currencySelector = document.getElementById("currency-select");
+            let priceDisplay = document.getElementById("eth-price");
+            let availableCurrencies = await getAvailableCurrencies();
+            
+            availableCurrencies.forEach(currency => {
+                let option = document.createElement("option");
+                option.value = currency;
+                option.textContent = currency.toUpperCase();
+                currencySelector.appendChild(option);
+            });
+            
+            async function updatePrice() {
+                let selectedCurrency = currencySelector.value;
+                let price = await getEthPrice(selectedCurrency);
+                priceDisplay.textContent = `${price} ${selectedCurrency.toUpperCase()}`;
+            }
+            
+            currencySelector.addEventListener("change", updatePrice);
+            updatePrice();
+        });
+    </script>
+</head>
+<body class="d-flex vh-100 text-white" style="background: #181818;">
+    <!-- Sidebar -->
+    <aside class="p-4 border-end border-secondary d-flex flex-column gap-4 bg-black shadow-lg" style="width: 250px;">
+        <h1 class="fs-3 fw-bold text-warning text-center">MetaMask</h1>
+        <nav class="d-flex flex-column gap-3">
+            <button class="btn btn-link text-start text-light">Dashboard</button>
+            <button class="btn btn-link text-start text-light">Move Crypto</button>
+            <button class="btn btn-link text-start text-light">Discover</button>
+            <button class="btn btn-link text-start text-light">Card</button>
+            <button class="btn btn-link text-start text-light">Tax Hub</button>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="d-flex flex-column align-items-center justify-content-center flex-grow-1">
+        <h2 class="fs-4 fw-bold text-warning mb-4">Buy Crypto</h2>
+        <div class="card p-4 bg-dark text-light shadow-lg border border-secondary" style="width: 350px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fw-semibold">Select Wallet</span>
+                    <span class="badge bg-warning text-dark" id="selected-wallet">USD</span>
+                </div>
+                <i class="fas fa-wallet text-warning fs-4"></i>
+            </div>
+            <div class="fs-1 fw-bold text-center text-success mb-3" id="eth-price">Loading...</div>
+            <select class="form-select bg-dark text-white border-secondary mb-3" id="currency-select"></select>
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="fas fa-credit-card text-primary fs-4"></i>
+                <span class="fw-semibold">Debit or Credit</span>
+            </div>
+            <button class="btn btn-warning w-100 fw-semibold text-dark">Connect Wallet</button>
+        </div>
+    </main>
+</body>
+</html>

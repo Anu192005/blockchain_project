@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMask - Create Password</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .card {
+            width: 400px;
+            border-radius: 10px;
+        }
+
+        .steps {
+            display: flex;
+            gap: 15px;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            background: #e0e0e0;
+            color: #777;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .step.active {
+            background: #037dd6;
+            color: white;
+        }
+
+        .password-strength {
+            height: 8px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .weak {
+            width: 33%;
+            background-color: red;
+        }
+
+        .medium {
+            width: 66%;
+            background-color: orange;
+        }
+
+        .strong {
+            width: 100%;
+            background-color: green;
+        }
+
+        .strength-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const newPassword = document.getElementById("newPassword");
+            const confirmPassword = document.getElementById("confirmPassword");
+            const termsCheckbox = document.getElementById("termsCheckbox");
+            const createWalletBtn = document.getElementById("createWalletBtn");
+            const togglePasswordBtns = document.querySelectorAll(".toggle-password");
+            const strengthBar = document.getElementById("passwordStrength");
+            const strengthText = document.getElementById("strengthText");
+
+            // Function to validate form inputs
+            function validateForm() {
+                const passwordValid = newPassword.value.length >= 8; 
+                const passwordsMatch = newPassword.value === confirmPassword.value;
+                const checkboxChecked = termsCheckbox.checked;
+
+                createWalletBtn.disabled = !(passwordValid && passwordsMatch && checkboxChecked);
+            }
+
+            // Password Strength Checker
+            function checkPasswordStrength() {
+                const password = newPassword.value;
+                let strength = 0;
+
+                if (password.length >= 8) strength++; 
+                if (/[A-Z]/.test(password)) strength++; 
+                if (/[0-9]/.test(password)) strength++; 
+                if (/[@#$%^&*!]/.test(password)) strength++; 
+
+                if (strength === 1) {
+                    strengthBar.className = "password-strength weak";
+                    strengthText.innerText = "Weak";
+                    strengthText.style.color = "red";
+                } else if (strength === 2 || strength === 3) {
+                    strengthBar.className = "password-strength medium";
+                    strengthText.innerText = "Medium";
+                    strengthText.style.color = "orange";
+                } else if (strength === 4) {
+                    strengthBar.className = "password-strength strong";
+                    strengthText.innerText = "Strong";
+                    strengthText.style.color = "green";
+                } else {
+                    strengthBar.className = "password-strength";
+                    strengthText.innerText = "";
+                }
+            }
+
+            // Toggle Password Visibility
+            togglePasswordBtns.forEach((button) => {
+                button.addEventListener("click", function () {
+                    const input = this.previousElementSibling;
+                    input.type = input.type === "password" ? "text" : "password";
+                    this.textContent = input.type === "password" ? "Show" : "Hide";
+                });
+            });
+
+            // Attach event listeners
+            newPassword.addEventListener("input", () => {
+                validateForm();
+                checkPasswordStrength();
+            });
+            confirmPassword.addEventListener("input", validateForm);
+            termsCheckbox.addEventListener("change", validateForm);
+
+            createWalletBtn.addEventListener("click", function () {
+                window.location.href = "Page3.html";
+            });
+
+            validateForm();
+        });
+    </script>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow p-4">
+            <div class="steps d-flex justify-content-center mb-4">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+            </div>
+
+            <h2 class="text-center fw-bold">Create password</h2>
+            <p class="text-muted text-center">
+                This password will unlock your MetaMask wallet only on this device. 
+                MetaMask cannot recover this password.
+            </p>
+
+            <!-- Password Fields -->
+            <div class="mb-3">
+                <label for="newPassword" class="form-label">New password (8 characters min)</label>
+                <div class="input-group">
+                    <input type="password" id="newPassword" class="form-control" minlength="8" required>
+                    <button class="btn btn-outline-secondary toggle-password" type="button">Show</button>
+                </div>
+                <!-- Password Strength Indicator -->
+                <div id="passwordStrength" class="password-strength"></div>
+                <p id="strengthText" class="strength-text"></p>
+            </div>
+
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm password</label>
+                <input type="password" id="confirmPassword" class="form-control" required>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" id="termsCheckbox" class="form-check-input">
+                <label for="termsCheckbox" class="form-check-label">
+                    I understand that MetaMask cannot recover this password for me. 
+                    <a href="#" class="text-primary">Learn more</a>
+                </label>
+            </div>
+
+            <button id="createWalletBtn" class="btn btn-primary w-100 mt-3" disabled>Create a new wallet</button>
+        </div>
+    </div>
+
+</body>
+</html>

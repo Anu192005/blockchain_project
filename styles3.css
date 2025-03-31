@@ -1,0 +1,390 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #0e0e2c;
+    background-attachment: fixed;
+    color: #ffffff;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('noise-texture.png'); /* Add a noise texture */
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+
+header {
+    position: fixed;
+    top:0;
+    width: 100%;
+    background-color: linear-gradient(135deg, #0e0e2c, #1a1a40, #2e2e70) ;
+    padding: 20px;
+    text-align: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease-in-out, background-color 0.5s ease-in-out;
+}
+
+header.scrolled {
+    background-color: rgba(26, 26, 64, 0.7); /* Semi-transparent when scrolling */
+    opacity: 0.5;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px; /* Adds 3D depth */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00d4ff;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+
+.logo-container img {
+    height: 6rem;
+    width: 6rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height:60px;
+    width:100%;
+    padding: 0;
+    background-color: "transparent"; /* Default navbar color */
+    transition: background-color 0.4s ease-in-out;
+}
+
+.nav-container {
+    max-width: 1200px; /* Limit the width */
+    margin: 0 auto; /* Center the navbar */
+    padding: 0 10px; /* Add left & right padding like Bootstrap */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    justify-content: center; /* Center items */
+    align-items: center;
+    padding: 0;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li:last-child {  
+    margin-left: auto; /* Pushes the Contact button to the right */
+}
+
+nav ul li a {
+    padding: 10px 15px 10px 15px;
+    text-decoration: none;
+    color: #00d4ff;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+    display: inline-block; /* Ensure transform works */
+    transition: transform 0.1s ease-in-out;
+}
+
+nav ul li a:hover {
+    background-color: #00d4ff;
+    color: #0e0e2c;
+    box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.8);
+}
+
+nav ul li a:active {
+    transform: scale(0.9);
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    color: #00d4ff;
+}
+
+.hero-subtext {
+    font-size: 24px; /* Increase font size */
+    font-weight: 600; /* Make it bold but not too heavy */
+    font-family: 'Poppins', sans-serif; /* Use a modern font */
+    line-height: 1.5; /* Adjust text height for better spacing */
+}
+
+.btn {
+    display: inline-block;
+    background-color: #00d4ff;
+    color: #0e0e2c;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.btn:hover {
+    background-color: #1a1a40;
+    color: #00d4ff;
+    border: 2px solid #00d4ff;
+    transition: all 0.3s ease-in-out;
+}
+.btn:active {
+    transform: scale(0.95); /* Slightly shrink the button */
+    transition: transform 0.1s ease-in-out;
+}
+
+/* General Section Styling */
+section {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #0e0e2c;
+    color: white;
+}
+
+h2 {
+    font-size: 32px;
+    color: #00d4ff;
+}
+
+/* ABOUT US */
+.about-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.about-box {
+    background-color: #1a1a40;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);
+    transition: transform 0.3s ease-in-out;
+}
+
+.about-box:hover {
+    transform: scale(1.05);
+}
+
+.services-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.service-box {
+    max-width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);
+    transition: transform 0.3s ease-in-out;
+    background-color: #1a1a40;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.service-box:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+    box-shadow: 0px 0px 15px rgba(0, 212, 255, 0.6); /* Adds glow effect */
+    transform: translateY(-5px);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1a1a40;
+}
+
+form {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+input, textarea {
+    width: 80%;
+    padding: 10px;
+    border: 2px solid #00d4ff;
+    border-radius: 5px;
+    background-color: transparent;
+    color: white;
+    margin-bottom: 10px;
+}
+
+form button {
+    background: #00d4ff;
+    color: #0e0e2c;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+form button:hover {
+    background: #0e0e2c;
+    color: #00d4ff;
+    border: 2px solid #00d4ff;
+}
+
+.menu-toggle {
+    display: none; /* Hide on large screens */
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: #00d4ff;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+#formStatus {
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+}
+@media screen and (min-width: 769px) {
+    nav ul li{
+        justify-content: center; /* Center the links */
+        width: 100%;
+
+    }
+    nav ul li:last-child {  
+        margin-left: auto; /* Pushes the Contact button to the right */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        padding: 15px;
+    }
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Ensures proper spacing */
+        width: 100%;
+        padding: 0 15px;
+    }
+    .logo-menu {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-grow: 0;
+    }
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Adjust spacing */
+    }
+    .menu-toggle {
+        display: block;
+        font-size: 30px;
+        background: none;
+        border: none;
+        color: #00d4ff;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    nav {
+        flex-direction: column;
+        height: auto;
+    }
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+    nav ul li {
+        width: 100%;
+        text-align: center;
+        margin: 10px 0;
+    }
+    nav ul li a {
+        display: block;
+        padding: 10px;
+    }
+    .nav-links {
+        display: none; /* Hide menu initially */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* Position below navbar */
+        left: 0;
+        background: #1a1a40;
+        border-radius: 5px;
+        padding: 10px;
+        text-align: center;
+    }
+    .nav-links.show {
+        display: flex; /* Show menu when toggled */
+    }
+    .hero h1 {
+        font-size: 28px;
+    }
+    .hero-subtext {
+        font-size: 18px;
+    }   
+    .about-container, .services-container {
+        flex-direction: column;
+        align-items: center;
+    }   
+    .about-box, .service-box {
+        width: 90%;
+    }    
+    form input, form textarea {
+        width: 100%;
+    } 
+}
+
+@media screen and (max-width: 480px) {
+    .logo-container img {
+        height: 3rem;
+        width: 3rem;
+    }
+    nav ul li a {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+    .hero {
+        padding: 80px 15px;
+    }
+    .hero h1 {
+        font-size: 24px;
+    }
+    .hero-subtext {
+        font-size: 16px;
+    }
+    .btn {
+        padding: 8px 15px;
+    }
+}

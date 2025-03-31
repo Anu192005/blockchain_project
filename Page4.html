@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Your Wallet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 150px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .phrase-box {
+            background: black;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 2px;
+            line-height: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 120px;
+        }
+        .phrase-line {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .phrase-line span {
+            flex: 1;
+            text-align: center;
+            margin: 0 10px;
+        }
+        .hidden-word {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            width: 80px;
+            margin: 5px;
+        }
+        .correct { background-color: lightgreen !important; }
+        .incorrect { background-color: lightcoral !important; }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #next-btn, #copy-btn { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Write down your Secret Recovery Phrase</h2>
+        <p>Write down this 12-word Secret Recovery Phrase and save it in a place that you trust.</p>
+        
+        <div id="phrase-box" class="phrase-box">Click to reveal</div>
+        
+        <button id="reveal-btn">Reveal Secret Recovery Phrase</button>
+        <button id="next-btn">Next</button>
+        <button id="copy-btn">Copy to Clipboard</button>
+    </div>
+
+    <script>
+        let mnemonic = "";
+        let hiddenIndexes = [];
+        let reveal = false;
+
+        async function generateMnemonic() {
+            if (!reveal) {
+                const wallet = ethers.Wallet.createRandom();
+                mnemonic = wallet.mnemonic.phrase.split(" ");
+                renderPhrase();
+                document.getElementById("copy-btn").style.display = "inline-block";
+                document.getElementById("next-btn").style.display = "inline-block";
+                reveal = true;
+            }
+        }
+
+        function renderPhrase() {
+            let phraseBox = document.getElementById("phrase-box");
+            phraseBox.innerHTML = "";
+            for (let i = 0; i < 12; i += 4) {
+                let lineDiv = document.createElement("div");
+                lineDiv.className = "phrase-line";
+                for (let j = 0; j < 4; j++) {
+                    let wordSpan = document.createElement("span");
+                    wordSpan.innerHTML = mnemonic[i + j];
+                    lineDiv.appendChild(wordSpan);
+                }
+                phraseBox.appendChild(lineDiv);
+            }
+        }
+
+        function hideRandomWords() {
+            hiddenIndexes = new Set();
+            while (hiddenIndexes.size < 4) {
+                let randomIndex = Math.floor(Math.random() * 12);
+                hiddenIndexes.add(randomIndex);
+            }
+            hiddenIndexes = Array.from(hiddenIndexes);
+            
+            let phraseBox = document.getElementById("phrase-box");
+            phraseBox.innerHTML = "";
+            for (let i = 0; i < 12; i += 4) {
+                let lineDiv = document.createElement("div");
+                lineDiv.className = "phrase-line";
+                for (let j = 0; j < 4; j++) {
+                    let index = i + j;
+                    let wordSpan = document.createElement("span");
+                    if (hiddenIndexes.includes(index)) {
+                        let input = document.createElement("input");
+                        input.type = "text";
+                        input.className = "hidden-word";
+                        input.setAttribute("data-index", index);
+                        wordSpan.appendChild(input);
+                    } else {
+                        wordSpan.innerHTML = mnemonic[index];
+                    }
+                    lineDiv.appendChild(wordSpan);
+                }
+                phraseBox.appendChild(lineDiv);
+            }
+
+            document.getElementById("next-btn").removeEventListener("click", hideRandomWords);
+            document.getElementById("next-btn").addEventListener("click", checkAnswers);
+        }
+
+        function checkAnswers() {
+            let inputs = document.querySelectorAll(".hidden-word");
+            let allCorrect = true;
+
+            inputs.forEach(input => {
+                let index = input.getAttribute("data-index");
+                if (input.value.trim().toLowerCase() === mnemonic[index].toLowerCase()) {
+                    input.classList.add("correct");
+                    input.classList.remove("incorrect");
+                } else {
+                    input.classList.add("incorrect");
+                    input.classList.remove("correct");
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                setTimeout(() => { 
+                    window.location.href = "Page5.html"; 
+                }, 1000);
+            }
+        }
+
+        function copyToClipboard() {
+            let text = mnemonic.join(" ");
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Secret Recovery Phrase copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy:", err);
+            });
+        }
+
+        document.getElementById("reveal-btn").addEventListener("click", generateMnemonic);
+        document.getElementById("next-btn").addEventListener("click", hideRandomWords);
+        document.getElementById("copy-btn").addEventListener("click", copyToClipboard);
+    </script>
+</body>
+</html>
